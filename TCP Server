@@ -1,0 +1,19 @@
+import socket
+
+HOST = '127.0.0.1' # Localhost
+PORT = 12345        # Port to listen on (non-privileged ports are > 1023)
+
+# Create a socket object
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.bind((HOST,PORT)) # Bind the socket to a public host and a well-known port
+    s.listen() # Enable a server to accept connections
+    print(f"[+] Server listening on {HOST}:{PORT}") # Print server listening message
+    conn, addr = s.accept() # Accept a connection
+    with conn: # Establish a connection
+        print(f"[+] Connected by {addr}") # Print connected message
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            print(f"[Server received]: {data.decode()}") # Print received data
+            conn.sendall(data) # Send data back to client
