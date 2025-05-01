@@ -1,0 +1,12 @@
+import socket
+
+HOST = '127.0.0.1' # Localhost
+PORT = 12345        # Port to listen on (non-privileged ports are > 1023) must match server port
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST,PORT)) # Connect to server
+    msg=input("Enter a message to send to server: ")
+    s.sendall(msg.encode())
+    data = s.recv(1024)
+
+print("[Client received]: {data.decode()}")
