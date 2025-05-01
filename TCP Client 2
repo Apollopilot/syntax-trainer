@@ -1,0 +1,23 @@
+import socket
+
+HOST = '127.0.0.1' # Localhost
+PORT = 12345        # Port to listen on (non-privileged ports are > 1023) must match server port
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST,PORT)) # Connect to server
+
+    while True: # While loop to keep the connection open
+        msg=input("Enter a message to send to server: ")
+        s.sendall(msg.encode())
+
+        if msg.lower() == 'exit':
+            print("[-] You ended the chat.")
+            break    
+            
+        data = s.recv(1024) # Receive data from server
+        reply = data.decode()
+        print(f"[Server]: {reply}")
+
+        if reply.lower() == 'exit':
+            print("[-] Server ended the chat.")
+            break
