@@ -1,0 +1,28 @@
+import urllib.request
+import xml.etree.ElementTree as ET
+
+# Prompt user for URL
+url = input('Enter location: ')
+
+# Retrieve the XML data from the provided URL
+print(f'Retrieving {url}')
+response = urllib.request.urlopen(url)
+data = response.read()
+
+# Print the length of the data received
+print(f'Retrieved {len(data)} characters')
+
+# Parse the XML data
+tree = ET.fromstring(data)
+
+# Find all 'count' tags using XPath
+counts = tree.findall('.//count')
+
+# Calculate the sum of all 'count' values
+sum_counts = 0
+for count in counts:
+    sum_counts += int(count.text)
+
+# Output the number of 'count' elements and the sum
+print(f'Count: {len(counts)}')
+print(f'Sum: {sum_counts}')
