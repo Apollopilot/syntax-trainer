@@ -1,0 +1,46 @@
+import urllib.request, urllib.parse
+import json
+
+    # Prompt for user input
+address = input('Enter location: ')
+serviceurl = 'http://py4e-data.dr-chuck.net/opengeo?'
+
+    # Construct URL with encoded parameters
+params = {'q': address}
+url = serviceurl + urllib.parse.urlencode(params)
+
+print('Retrieving', url)
+
+    # Read response
+uh = urllib.request.urlopen(url)
+data = uh.read().decode()
+print('Retrieved', len(data), 'characters')
+
+    # Load JSON
+try:
+        js = json.loads(data)
+except:
+        js = None
+
+    # Full dump (optional for debugging)
+    # print(json.dumps(js, indent=4))
+
+    # Extract from JSON if structure is correct
+if not js or 'features' not in js or len(js['features']) == 0:
+        print('No data found for the location.')
+else:
+        feature = js['features'][0]
+        props = feature.get('properties', {})
+
+        # Try to get plus code
+        plus_code = props.get('plus_code')
+        if plus_code:
+            print('\nPlus Code:', plus_code)
+        else:
+            print('\nNo plus code found.')
+
+        # Always show lat/lon as fallback
+        lat = props.get('lat')
+        lon = props.get('lon')
+        if lat and lon:
+            print(f'Latitude: {lat}, Longitude: {lon}')
